@@ -1,0 +1,24 @@
+
+-- TerminoSet
+
+
+Scaffold-DbContext "Server=ANAXERPC\MSSQLSERVER2019;Database=dbGlosario;User ID=sa;pwd=jkypol19;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Tables TerminoSet    -Context ProcesoGlosarioContext -Force
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                //Aquí va la cadena de cionexión
+                var builder = new ConfigurationBuilder()
+                 .SetBasePath(Directory.GetCurrentDirectory())
+                 .AddJsonFile("appsettings.json");
+
+                var configuration = builder.Build();
+                var cadenaDeConexion = configuration.GetConnectionString("CadenaDeConexion");
+
+                if (Utiles.GetParametroDeConfiguracion("Produccion") == "1")
+                    cadenaDeConexion = configuration.GetConnectionString("CadenaDeConexionProduccion");
+
+                optionsBuilder.UseSqlServer(cadenaDeConexion); // <- la dejo vacía porque realmente se va a asignar en el Startup.cs del proyecto web (y ya desde ahí se obtiene la cadena de conexión del archivo appsettings.json)            }
+            }
+        }
